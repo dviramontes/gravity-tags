@@ -1,6 +1,6 @@
 url = 'http://feeds.delicious.com/v2/json/tags/dviramontes'
 width = 680
-height = 200
+height = 500
 xoffset = width/2
 yoffset = height/2
 
@@ -53,7 +53,7 @@ main = (data) ->
   svg
     .attr 'width', width
     .attr 'height', height
-    .style "border": '3px gray solid'
+    .style "border": '1px red solid'
 
   group = svg.append('g')
     .attr('class', 'solarSystem')
@@ -71,17 +71,28 @@ main = (data) ->
     .attr('fill', (d, i) ->
       theme(i))
 
+#  d3.timer ->
+#    phi0 = 45
+#    speed = 10
+#    delta = Date.now() - t0
+#    console.log(delta)
+#    d3.select('.solarSystem')
+#    .selectAll('circle')
+#    .attr("transform", (d, i) ->
+#       "rotate(" + i + delta * speed/100 + ")")
 
-  d3.timer ->
-    phi0 = 45
-    speed = 10
-    delta = Date.now() - t0
-    console.log(delta)
-    d3.select('.solarSystem')
-      .selectAll('circle')
-      .attr("transform", (d, i) ->
-        return "rotate(" + i + delta * speed/100 + ")")
+  `
+  d3.timer(function() {
+     delta = (Date.now() - t0);
+     speed = 5;
+     phi0= 10;
+     group.selectAll('circle').attr("transform", function(d,i) {
+      return "rotate(" + d.count * phi0  + delta * (speed/i)  + ")";
+    })
+  })
+  `
 
+  return false
 
 
 
