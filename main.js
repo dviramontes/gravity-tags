@@ -4,7 +4,7 @@
 
   url = 'http://feeds.delicious.com/v2/json/tags/dviramontes';
 
-  width = 400;
+  width = 680;
 
   height = 200;
 
@@ -20,22 +20,23 @@
   }).success(withData);
 
   main = function(data) {
-    var group, svg, tags, theme;
+    var centerSolarSystem, group, svg, tags, theme;
     tags = _.map(data, function(d, i) {
       return {
         tag: i,
-        "count": d
+        'count': d
       };
     });
-    theme = d3.scale.linear().domain([1, 20]).range(['#67001f', '#b2182b', '#d6604d', '#f4a582', "#fddbc7", "#ffffff", "#e0e0e0", "#bababa", "#878787", "#4d4d4d", "#1a1a1a"]);
-    svg = d3.select('body').append('svg');
+    centerSolarSystem = function(d, i) {
+      return i + 10;
+    };
+    theme = d3.scale.linear().domain([1, tags.length]).range(['#67001f', '#ffffff', '#e0e0e0', '#b2182b', '#d6604d', '#f4a582', '#ffffe7', '#bababa', '#878787', '#4d4d4d', '#1a1a1a', '#fddbc7', '#ffff9f']);
+    svg = d3.select('.viz').append('svg');
     svg.attr('width', width).attr('height', height).style({
-      "border": "2px red solid"
+      "border": '3px orange solid'
     });
     group = svg.append('g').attr('transform', 'translate(' + 0 + ',' + height / 2 + ')');
-    return group.selectAll('circle').data(tags).enter().append('circle').attr('cx', function(d, i) {
-      return i;
-    }).attr('cy', 0).attr('r', function(d, i) {
+    return group.selectAll('circle').data(tags).enter().append('circle').attr('cx', centerSolarSystem).attr('cy', 0).attr('r', function(d, i) {
       return d.count;
     }).attr('fill', function(d, i) {
       return theme(i);
