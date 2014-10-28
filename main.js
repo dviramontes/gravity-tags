@@ -30,7 +30,6 @@ main = function(data) {
     };
   });
   star = _.max(tags, 'count');
-  t0 = Date.now();
   centerSolarSystem = function(d, i) {
     if (d.tag === star.tag) {
       return 0;
@@ -44,20 +43,20 @@ main = function(data) {
     "border": '1px red solid'
   });
   group = svg.append('g').attr('class', 'solarSystem').attr('transform', 'translate(' + xoffset + ',' + yoffset + ')');
+  t0 = Date.now();
   group.selectAll('circle').data(tags).enter().append('circle').attr('cx', centerSolarSystem).attr('cy', 0).attr('r', function(d, i) {
     return d.count;
   }).attr('fill', function(d, i) {
     return theme(i);
   });
-  
-  d3.timer(function() {
-     delta = (Date.now() - t0);
-     speed = 5;
-     phi0= 10;
-     group.selectAll('circle').attr("transform", function(d,i) {
-      return "rotate(" + d.count * phi0  + delta * (speed/i)  + ")";
-    })
-  })
-  ;
-  return false;
+  return d3.timer(function() {
+    var delta, phi0, speed;
+    phi0 = 45;
+    speed = 0.001;
+    delta = Date.now() - t0;
+    d3.select('.solarSystem').selectAll('circle').attr("transform", function(d, i) {
+      return "rotate(" + d.count + phi0 + delta * (speed * i) + ")";
+    });
+    return false;
+  });
 };
