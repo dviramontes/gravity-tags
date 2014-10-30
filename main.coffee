@@ -18,6 +18,8 @@ main = (data) ->
   tags = _.map data, (d, i) -> tag: i, 'count': d
 
   star = _.max(tags, 'count')
+  console.log("star")
+  console.dir(star)
 
   centerSolarSystem = (d, i) ->
     if d.tag == star.tag
@@ -25,24 +27,7 @@ main = (data) ->
     else
       return i + star.count
 
-  theme = d3.scale
-  .linear()
-  .domain([1, tags.length])
-  .range([
-      '#67001f'
-      '#ffffff'
-      '#e0e0e0'
-      '#b2182b'
-      '#d6604d'
-      '#f4a582'
-      '#ffffe7'
-      '#bababa'
-      '#878787'
-      '#4d4d4d'
-      '#1a1a1a'
-      '#fddbc7'
-      '#ffff9f'
-    ])
+  theme = d3.scale.category20c();
 
   svg = d3.select('.viz')
   .append('svg')
@@ -77,7 +62,7 @@ main = (data) ->
     d3.select('.solarSystem')
     .selectAll('circle')
     .attr("transform", (d, i) ->
-      return "rotate(" + d.count + phi0 +  delta * (speed * i) + ")")
+       "rotate(" + d.count + phi0 +  delta * (speed * i) + ")")
 
     return false
 

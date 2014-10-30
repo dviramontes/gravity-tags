@@ -30,6 +30,8 @@ main = function(data) {
     };
   });
   star = _.max(tags, 'count');
+  console.log("star");
+  console.dir(star);
   centerSolarSystem = function(d, i) {
     if (d.tag === star.tag) {
       return 0;
@@ -37,7 +39,7 @@ main = function(data) {
       return i + star.count;
     }
   };
-  theme = d3.scale.linear().domain([1, tags.length]).range(['#67001f', '#ffffff', '#e0e0e0', '#b2182b', '#d6604d', '#f4a582', '#ffffe7', '#bababa', '#878787', '#4d4d4d', '#1a1a1a', '#fddbc7', '#ffff9f']);
+  theme = d3.scale.category20c();
   svg = d3.select('.viz').append('svg');
   svg.attr('width', width).attr('height', height).style({
     "border": '1px red solid'
