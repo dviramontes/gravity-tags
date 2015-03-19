@@ -1,0 +1,2 @@
+{:require  [yay.app]
+ :init-fns [yay.app/init]}
