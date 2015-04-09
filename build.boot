@@ -8,7 +8,8 @@
                  [reagent "0.5.0-alpha3"]
                  [net.drib/strokes "0.5.1"]
                  [boot-garden "1.2.5-1" :scope "test"]
-                 [deraen/boot-less "0.2.1" :scope "test"]])
+                 [deraen/boot-less "0.2.1" :scope "test"]
+                 [net.drib/strokes "0.5.1"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
