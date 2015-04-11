@@ -6,7 +6,7 @@
 (enable-console-print!) ;; enable print at web inspector console
 
 (defonce 
-  ;; "http://feeds.delicious.com/v2/json/tags/dviramontes" 
+  ;; "http://feeds.delicious.com/v2/json/tags/dviramontes"
   ;; delicious api is currently down
   url "tags.json")  
 
@@ -29,11 +29,11 @@
                  :background-repeat "repeat-y"
                  :background-position "left"
                  }}
-    ;;"imm.aterial.org"
+    ;;(take 400 (cycle "//"))
     ]
    [:ul.list-inline
     [:li [:h4 "David Viramontes"]]
-    [:li [:span {:style {:color "pink"}} " @ "]
+    [:li [:span {:style {:color "pink"}} [:b " @ "]]
      [:li [:span "linkedin"]]
      [:li [:span "github"]]
      [:li [:span "twitter"]]
@@ -42,12 +42,21 @@
      [:li [:span "soundcloud"]]]]
    [:hr]])
 
-(defn tags-component []  
-  (let []
-    (fn []
-      [:ul.list-unstyled
-       (for [tag @tags]
-         ^{:key tag} [:li (str (key tag)) ", " [:em (val tag)]])])))
+(defn tags-component []
+  (fn []
+    [:ul.list-unstyled
+
+     #_(-> val
+        (map @tags)
+        (#(apply max %))
+        print)
+
+     
+     (for [tag @tags
+           :let [x (when-not (empty? @tags)
+                 (key (apply max-key val @tags)))]] 
+ 
+       ^{:key tag} [:li (str (key tag)) ", " [:em (val tag)]])]))
 
 (defn parent-component []
   [:div.container
@@ -56,8 +65,10 @@
     [:div.col-lg-12 [tags-component]]]])
 
 (defn react-component []
-  (reagent/create-class {:reagent-render parent-component
-                         :component-did-mount get-tags}))
+  (reagent/create-class {
+                         :component-will-mount get-tags
+                         :reagent-render parent-component
+                         }))
 
 (defn init []
   (reagent/render-component [react-component]
