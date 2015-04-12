@@ -19,7 +19,14 @@
                              })) 
    (fn [x] 
      (reset! tags (walk/keywordize-keys 
-                   (frequencies (:tags (js->clj x :keywordize-keys true))))))))
+                   (frequencies (:tags (js->clj x :keywordize-keys true)))))
+     (let [svg (.. js/d3 (select "#viz svg"))]
+       #_(print svg)
+       (.. js/d3 (selectAll "circle")
+           (data (clj->js [1 2 3]))
+           (enter)
+           (append "circle"))
+       ))))
 
 (defn info-component []
   [:div.navbar
@@ -28,15 +35,14 @@
                  :background-image "url(img/header-bg.png)"
                  :background-repeat "repeat-y"
                  :background-position "left"
-                 }}
-    ;;(take 400 (cycle "//"))
-    ]
+                 }}]
    [:ul.list-inline
     [:li [:h4 "David Viramontes"]]
     [:li [:span {:style {:color "pink"}} [:b " @ "]]
      [:li [:span "linkedin"]]
      [:li [:span "github"]]
      [:li [:span "twitter"]]
+     [:li [:span "ello"]]
      [:li [:span "behance"]]
      [:li [:span "tumblr"]]
      [:li [:span "soundcloud"]]]]
@@ -45,28 +51,28 @@
 (defn tags-component []
   (fn []
     [:ul.list-unstyled
+     (let [star (when-not (empty? @tags)
+                  (key (apply max-key val @tags)))]      
+       (for [tag @tags] 
+         ^{:key tag} [:li (str (key tag)) ", " [:em (val tag)]]))]))
 
-     #_(-> val
-        (map @tags)
-        (#(apply max %))
-        print)
-
-     
-     (for [tag @tags
-           :let [x (when-not (empty? @tags)
-                 (key (apply max-key val @tags)))]] 
- 
-       ^{:key tag} [:li (str (key tag)) ", " [:em (val tag)]])]))
+(defn d3-component []
+  (fn []
+    [:div.parent
+     [:p.text-center "d3 component"]
+     [:div#viz [:svg]]]))
 
 (defn parent-component []
   [:div.container
    [:div.row 
     [:div.col-lg-12 [info-component]]
-    [:div.col-lg-12 [tags-component]]]])
+    [:div.col-lg-6.col-sm-6 [tags-component]]
+    [:div.col-lg-6.col-sm-6 [d3-component]]
+    ]])
 
 (defn react-component []
   (reagent/create-class {
-                         :component-will-mount get-tags
+                         :component-did-mount get-tags
                          :reagent-render parent-component
                          }))
 
