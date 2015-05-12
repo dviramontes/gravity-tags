@@ -217,3 +217,8 @@ x
 (apply val {:a 3 :b 43 :c 10})
 (apply max-key {:a 3 :b 43 :c 10})
 (empty? {})
+(let [x 4 y 1] y)
+(let [x 4 y 1] x)
+(let [x 4 y 1] (+ x y))
+(let [x 4 y ])
+(let [x 4 y 9])
