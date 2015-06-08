@@ -5,10 +5,11 @@
                  [adzerk/boot-cljs-repl "0.1.9"      :scope "test"]
                  [adzerk/boot-reload    "0.2.4"      :scope "test"]
                  [pandeiro/boot-http    "0.6.1"      :scope "test"]
+                 [adzerk/boot-cljs "0.0-3269-2"]
                  [reagent "0.5.0-alpha3"]
                  [cljsjs/d3 "3.5.5-3"]       
                  [cljsjs/jquery "1.9.1-0"]          
-                 [net.drib/strokes "0.5.1"]
+                 ;; [net.drib/strokes "0.5.1"]
                  [boot-garden "1.2.5-1" :scope "test"]
                  [deraen/boot-less "0.2.1" :scope "test"]
                  [net.drib/strokes "0.5.1"]])

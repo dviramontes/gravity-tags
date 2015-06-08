@@ -222,3 +222,8 @@ x
 (let [x 4 y 1] (+ x y))
 (let [x 4 y ])
 (let [x 4 y 9])
+(range 4)
+(type (range 4))
+(run)
+(browser-repl)
+(start-repl)
