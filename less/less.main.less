@@ -1,12 +1,38 @@
 @font-stack:    Helvetica, sans-serif;
-@primary-color: white;
+@primary-color: rgba(197,176,213,0.16);
+@font-color: white;
 
 body {
-  background: black; 
+  background: black;
   font: 120% @font-stack;
-  color: @primary-color;
+  color: @font-color;
+  font-weight: 400;
+}
+a {
+  color: lemonchiffon;
 }
 
 hr{
   border-top: 1px solid #4E4E4E;
+}
+.jumbotron {
+  z-index: 1;
+  border-radius: 0;
+  background-color: inherit;
+}
+#viz{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 0;
+}
+.title-badge {
+  display: inline-block;
+  padding: 15px;
+  font-size: 4rem;
+  font-weight: normal;
+  line-height: 1;
+  color: #fff;
+  border-radius: inherit;
+  background-color: #777;
 }
