@@ -227,3 +227,5 @@ x
 (run)
 (browser-repl)
 (start-repl)
+(js/Date.)
+*ns*

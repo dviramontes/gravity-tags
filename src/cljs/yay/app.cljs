@@ -3,7 +3,7 @@
     [clojure.walk :as walk]
     ;; [cljsjs.d3 :as d3]
     [cljsjs.jquery :as $]
-    [reagent.core :as reagent :refer [atom]]))
+    [reagent.core :as r]))
 
 (enable-console-print!)
 
@@ -11,44 +11,34 @@
   ;; "http://feeds.delicious.com/av2/json/tags/dviramontes"
   "tags.json")
 
-(def tags (atom {}))
+(defonce app-state (r/atom {:tags  []
+                            :timer (js/Date.)}))
 
-(defn get-tags [self]
+(defonce time-updater (js/setInterval
+                        #(swap! app-state assoc :timer (js/Date.)) 1000))
+
+(defn get-tags-and-draw [self]
       (let [width (.-innerWidth js/window)
-
             height (.-innerHeight js/window)
-
-            xoffset (/ width 5)
-
-            yoffset (/ height 2)
-
+            xoffset (/ width 2)
+            yoffset (/ height 3)
             theme (.category20 (aget js/d3 "scale"))
-
-            DOM (reagent/dom-node self)
-
+            DOM (r/dom-node self)
             svg (.. js/d3
                     (select DOM)
-                    (select "svg"))
-            t0 (.now js/Date)]
-
+                    (select "svg"))]
            (.done
-
              (.ajax js/$ url #js {:crossDomain true :dataType "json"})
-
              (fn [json-data]
 
                  (let [tags-prop (.-tags json-data)
-
                        t-freq (walk/keywordize-keys
                                 (frequencies (js->clj tags-prop :keywordize-keys true)))
-
                        star (key (apply max-key val t-freq))
-
                        star-offset (get t-freq star)
-
                        tag-in-freq #((keyword %) t-freq)]
 
-                      (reset! tags t-freq)
+                      (swap! app-state assoc :tags t-freq)
 
                       (println (str "your star is : " (name star)))
 
@@ -79,30 +69,30 @@
                                                           10
                                                           (tag-in-freq d))))))
                       (.. js/d3
-                          (timer (fn []
+                          (timer (fn [past]
                                      (let [phi0 45
                                            speed 0.01
-                                           delta (- (.now js/Date) t0)]
-
+                                           delta (- (.now js/Date) (:timer @app-state))]
+                                          (println (str "passed: " past))
                                           (.. js/d3
                                               (select "g.solarSystem")
                                               (selectAll "circle")
                                               (attr "transform"
                                                     (fn [d i]
-                                                        (str "rotate(" (* t0 speed i) ")")))))))))))))
+                                                        (str "rotate(" (* delta speed i) ")")))))))))))))
 
 (defn tags-component []
       [:ul.list-unstyled
-       (for [tag (reverse (sort-by second @tags))]
+       (for [tag (reverse (sort-by second (:tags @app-state)))]
             ^{:key tag} [:li [:span.badge (str (key tag)) " " [:em (val tag)]]])])
 
 (defn info-component []
       [:div.navbar.jumbotron
        [:ul.list-inline.text-center
-        [:li [:h2 [:span.title-badge "Gravity Bookmarks"]]]
+        [:li [:h2 [:span.title-badge "Gravity Tags"]]]
         [:li.pull-right {:style {:color "white"}}
-         [:a {:href "https://github.com/dviramontes/gravity-bookmarks"}
-          [:span.mega-octicon.octicon-octoface]]]]
+         [:a {:href "https://github.com/dviramontes/gravity-tags"}
+          [:span.circle.mega-octicon.octicon-octoface]]]]
        [:hr]
        [tags-component]])
 
@@ -120,10 +110,10 @@
          [:div.col-lg-12 [info-component]]]]])
 
 (defn react-component []
-      (reagent/create-class
-        {:component-did-mount get-tags
+      (r/create-class
+        {:component-did-mount get-tags-and-draw
          :reagent-render      parent-component}))
 
-(defn init []
-      (reagent/render-component [react-component]
-                                (.getElementById js/document "mount")))
+(defn ^:export init []
+      (r/render-component [react-component]
+                          (.getElementById js/document "mount")))
